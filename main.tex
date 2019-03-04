@@ -1,0 +1,238 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{csvsimple}
+\usepackage{listings}
+
+\title{Project 1}
+\author{Robert Relyea}
+\date{Spring 2019}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+Space domain image filtering is useful for augmenting image content as well as reducing noisiness in images. Operations in the frequency domain of images through the Fourier transform are also useful for performing image reconstruction and illustrating the importance of frequency content in the imaging space. In this exercise, several experiments were performed on images in both the space and frequency domains.
+
+%---------- Part 1 ----------
+
+\section{Filtering in the Space Domain}
+Space domain image operations are commonly performed using convolutions with kernels specific to the task. These kernels can sharpen and blur images as well as highlight edges within the image content. An example 5x5 high-pass kernel is shown in Figure \ref{Figure:highpass}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part1/high_pass_kernel.png}
+  \caption{Illustration of a 5x5 high-pass kernel with a scaling factor applied. }
+  \label{Figure:highpass}
+\end{figure}
+
+The first space domain operation performed was a high-pass filter with the kernel illustrated in Figure \ref{Figure:highpass}. The input image utilized for this operation is shown in Figure \ref{Figure:pup} and the resulting filtered image is shown in Figure \ref{Figure:highpup}. The filtered image contains only the high frequency content of the original image including the edges of the fur and the upper eyelids. The high-pass operation was completed in 0.2901 seconds using a convolution operation implemented with Python and NumPy. Edges of the image are padded by continuing the last edge value.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{data/pup.jpg}
+  \caption{A grayscale image with rich frequency content. }
+  \label{Figure:pup}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part1/high_pup.jpg}
+  \caption{Image from Figure \ref{Figure:pup} after being passed through a high-pass filter. }
+  \label{Figure:highpup}
+\end{figure}
+
+A low-pass filter was also applied to the image in Figure \ref{Figure:pup}. The resulting filtered image is shown in Figure \ref{Figure:lowpup}. The resulting image lacks much of the high-frequency fur detail and the eye reflections are invisible. With subsequent passes through the low-pass filter, the image becomes blurrier. This is shown in Figure \ref{Figure:low2pup} where the original image was passed through a low-pass filter three times.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part1/low_pup.jpg}
+  \caption{Image from Figure \ref{Figure:pup} after being passed through a low-pass filter. }
+  \label{Figure:lowpup}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part1/low2_pup.jpg}
+  \caption{Image from Figure \ref{Figure:pup} after being passed through a low-pass filter three times. }
+  \label{Figure:low2pup}
+\end{figure}
+
+A Sobel edge detection filter was also applied to the image in Figure \ref{Figure:pup}. The resulting edges in the x and y directions after thresholding are shown in Figure \ref{Figure:edgeypup}, and the sum of x and y edges are shown in Figure \ref{Figure:edgepup}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part1/edgey_pup.jpg}
+  \includegraphics[width=0.4\columnwidth]{figures/part1/edgex_pup.jpg}
+  \caption{Image from Figure \ref{Figure:pup} after a Sobel x-axis (left) and y-axis (right) edge detection filter was applied. }
+  \label{Figure:edgeypup}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part1/edge_pup.jpg}
+  \caption{Sum of Sobel edges shown in Figure \ref{Figure:edgeypup}. }
+  \label{Figure:edgepup}
+\end{figure}
+
+%---------- Part 2 ----------
+
+\section{Filtering a Noisy Image}
+Spatial domain operations on images can be used to reduce noise and improve the overall quality of the image. To illustrate this capability, salt and pepper and Gaussian noise were added to the image shown in Figure \ref{Figure:pup}. The signal to noise ratio for the image with added salt and pepper noise shown in Figure \ref{Figure:noisepup} was -0.8288 dB. The signal to noise ratio for the image with added Gaussian noise shown in Figure \ref{Figure:noisepup} was -0.4196 dB.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part2/seasoned_pup.jpg}  \includegraphics[width=0.4\columnwidth]{figures/part2/gaussed_pup.jpg}
+  \caption{Image from Figure \ref{Figure:pup} after salt and pepper noise was added (left) and Gaussian noise was added (right). }
+  \label{Figure:noisepup}
+\end{figure}
+
+Two common approaches for reducing noise in images include low-pass and median filtering. Low-pass or average filtering is effective for uniformly distributed noise while median filtering is better suited for filtering out impulse noise. The results of low-pass and median filtering on the image with salt and pepper noise are shown in Figure \ref{Figure:unseasonedpup}. The results of low-pass and median filtering on the image with Gaussian noise are shown in Figure \ref{Figure:degaussedpup}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part2/averaged_spup.jpg}
+  \includegraphics[width=0.4\columnwidth]{figures/part2/median_spup.jpg}
+  \caption{Image with salt and pepper noise from Figure \ref{Figure:noisepup} after being passed through a low-pass filter (left) and a median filter (right). }
+  \label{Figure:unseasonedpup}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part2/averaged_gpup.jpg}
+  \includegraphics[width=0.4\columnwidth]{figures/part2/median_gpup.jpg}
+  \caption{Image with Gaussian noise from Figure \ref{Figure:noisepup} after being passed through a low-pass filter (left) and a median filter (right). }
+  \label{Figure:degaussedpup}
+\end{figure}
+
+To highlight the effects of the added noise shown in Figure \ref{Figure:noisepup} Sobel edge detection was performed. The resulting images are shown in Figure \ref{Figure:sobelnoisepup}. The salt and pepper noise causes a significant amount of new edges to be detected. The Gaussian noise dominates the output of the edge detector. To produce stronger edge detections in noisy images, one of the two explored filtering methods should be applied. For salt and pepper noise a median filter is ideal and a low-pass filter for Gaussian noise. The Sobel edge detection results from appropriate filtering for the noisy images are shown in Figure \ref{Figure:sobeldenoisepup}. The results show a drastic reduction in detected edges contributed by noise as well as a loss of edges compared to the original image shown in Figure \ref{Figure:edgepup}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part2/sobel_spup.jpg}
+  \includegraphics[width=0.4\columnwidth]{figures/part2/sobel_gpup.jpg}
+  \caption{The image with salt and pepper noise (left) and Gaussian noise (right) from Figure \ref{Figure:noisepup} after being passed through a Sobel edge detector.}
+  \label{Figure:sobelnoisepup}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part2/sobel_mspup.jpg}
+  \includegraphics[width=0.4\columnwidth]{figures/part2/sobel_lgpup.jpg}
+  \caption{Sobel edge detection on pre-filtered noisy images. An image with salt and pepper noise reduced by median filtering and passed through a Sobel edge detector is shown on the left. An image with Gaussian noise reduced by low-pass filtering and passed through a Sobel edge detector is shown on the right.}
+  \label{Figure:sobeldenoisepup}
+\end{figure}
+
+%---------- Part 3 ----------
+\section{The 2-D Fourier Transform}
+The frequency domain exposes additional features about the content of an image. The frequency spectrum of an image can be obtained by performing a Fourier transform. The fast Fourier transform (FFT) can be calculated through NumPy by utilizing the np.fft.fft2 command on an image as documented at \cite{opencvfft}. The magnitude of the resulting spectral information of the image from Figure \ref{Figure:pup} is shown in Figure \ref{Figure:fftpup}. The origin is located in the corners of the image after the np.fft.fftshift function call. The np.fft.fftshift command shifts the origin into the center of the frame and performing the log operation improves the visibility of the magnitudes across the spectrum. These adjusted magnitude visualizations are shown in Figure \ref{Figure:fftbetterpup}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part3/fft.png}
+  \caption{Visualization of the frequency magnitude of the image in Figure \ref{Figure:pup} after performing a FFT. }
+  \label{Figure:fftpup}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part3/fft_shift.png}
+  \includegraphics[width=0.4\columnwidth]{figures/part3/fft_log.png}
+  \caption{Visualization of the spectral magnitudes shown in Figure \ref{Figure:fftpup} after applying np.fft.fftshift (left) and the log operation (right). }
+  \label{Figure:fftbetterpup}
+\end{figure}
+
+Reconstruction of the original image after performing the FFT is possible through the inverse fast Fourier transform (IFFT). The NumPy np.fft.ifft2 command exposes this functionality. The resulting image after applying the IFFT to the previously calculated FFT is shown in Figure \ref{Figure:reconpup}. Further reconstructions were performed after zeroing out frequencies outside a certain radius. Mean squared error results for all reconstructions are shown in Table \ref{Table:mse}. Reconstructed images after zeroing magnitudes outside a radius of N/3 and N/16 are shown in Figure \ref{Figure:badrecons}. These images show a degradation in high frequency content compared to the original image in Figure \ref{Figure:pup}.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.5\columnwidth]{figures/part3/recon.png}
+  \caption{Reconstructed image utilizing the IFFT on the FFT of the image shown in Figure \ref{Figure:pup}. }
+  \label{Figure:reconpup}
+\end{figure}
+
+\begin{table}[!ht]
+    \centering
+    \caption{Mean squared error results for IFFT image reconstruction after altering the frequency magnitude of the image shown in Figure \ref{Figure:pup}.}
+    \resizebox{0.7\linewidth}{!}{
+        \begin{tabular}{l|c}
+            \bfseries Zeroing Radius & \bfseries Mean Squared Error
+            \csvreader[head to column names]{figures/part3/results.csv}{}
+            {\\\hline\reconstruction\ & \mse}
+        \end{tabular}
+    }
+    \label{Table:mse}
+\end{table}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part3/recon_3.png}
+  \includegraphics[width=0.4\columnwidth]{figures/part3/recon_16.png}
+  \caption{Reconstructed image utilizing the IFFT on the FFT of the image shown in Figure \ref{Figure:pup} after zeroing frequency magnitudes outside radii N/3 (left) and N/16 (right). }
+  \label{Figure:badrecons}
+\end{figure}
+
+%---------- Part 4 ----------
+
+\section{The Magnitude and Phase of the 2-D DFT}
+To illustrate the importance of both the real and imaginary components of the FFT when reconstructing an image, two separate images were reconstructed after swapping frequency magnitudes and keeping their phases. The two images used for this experiment are shown in Figure \ref{Figure:pups} which were obtained from the dataset provided by Khosla et al.\ \cite{dogs}. The magnitude and phase of the first image can be seen in Figure \ref{Figure:pup1fft} and the frequency content of the second image is shown in \ref{Figure:pup2fft}. The resulting reconstructed images are shown in Figure \ref{Figure:swappedrecon}. The resulting mean squared reconstruction error of the first image was 0.15336 and the second image was 0.15225. Both reconstructed images contain components of the other image. A difference in overall intensity is the only distinguishable property between the reconstructed images.
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{data/n02091032_561_gs.jpg}
+  \includegraphics[width=0.4\columnwidth]{data/n02091134_755_gs.jpg}
+  \caption{Grayscale images with rich frequency content. }
+  \label{Figure:pups}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part4/fft1_mag.png}
+  \includegraphics[width=0.4\columnwidth]{figures/part4/fft1_phase.png}
+  \caption{Magnitude (left) and phase (right) of the first image shown in Figure \ref{Figure:pups}.}
+  \label{Figure:pup1fft}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part4/fft2_mag.png}
+  \includegraphics[width=0.4\columnwidth]{figures/part4/fft2_phase.png}
+  \caption{Magnitude (left) and phase (right) of the second image shown in Figure \ref{Figure:pups}.}
+  \label{Figure:pup2fft}
+\end{figure}
+
+\begin{figure}[!ht]
+  \centering
+  \includegraphics[width=0.4\columnwidth]{figures/part4/fft1_recon.png}
+  \includegraphics[width=0.4\columnwidth]{figures/part4/fft2_recon.png}
+  \caption{Reconstructions of the first (left) and second (right) images shown in Figure \ref{Figure:pups} after swapping frequency magnitudes obtained from the FFT.}
+  \label{Figure:swappedrecon}
+\end{figure}
+
+\section{Discussion}
+Several different concepts were explored in this exercise including operations in both the spatial and frequency domains of different images. High and low frequency content filtering were implemented and their effects after being applied to images were documented. Low-pass and median filtering were utilized to reduce noise in images where salt and pepper and Gaussian noise were artificially introduced. Median filtering proved to be effective for reducing salt and pepper noise as illustrated by the resulting Sobel edge detection output. This was also demonstrated for low-pass filtering on Gaussian noise. The frequency content of images was extracted successfully utilizing FFT operations available in the NumPy fft library. The real and imaginary components were visualized after performing a np.fft.fftshift operation and applying the log operation to the resulting magnitude and phase components. The effects of zeroing out high-frequency magnitudes and performing image reconstruction through the IFFT was observed. Mean squared error results of the varied reconstructions showed an increase in reconstruction error as more high frequency content was removed. Further reconstruction errors were observed when swapping the frequency magnitudes of two separate images and performing reconstruction through the IFFT. The resulting reconstructed images contained content from both images and varied only in image intensity.
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\section{Appendix}
+
+\subsection{utils.py}
+\lstinputlisting[language=Octave]{scripts/utils.py}
+
+\subsection{part1.py}
+\lstinputlisting[language=Octave]{scripts/part1.py}
+
+\subsection{part2.py}
+\lstinputlisting[language=Octave]{scripts/part2.py}
+
+\subsection{part3.py}
+\lstinputlisting[language=Octave]{scripts/part3.py}
+
+\subsection{part4.py}
+\lstinputlisting[language=Octave]{scripts/part4.py}
+
+\end{document}
