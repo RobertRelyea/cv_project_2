@@ -1,8 +1,6 @@
 import cv2
 import numpy as np
 import pdb
-from matplotlib import pyplot as plt
-import math
 import glob
 import re
 
@@ -55,11 +53,11 @@ if RUN_DATASET:
 histograms = np.load(DATASET_PATH + "histograms.npy")
 filenames = np.load(DATASET_PATH + "filenames.npy")
 
-image = cv2.imread(DATASET_PATH + "203.jpg")
+image = cv2.imread(DATASET_PATH + "903.jpg")
 
 matches = np.zeros(histograms.shape[0])
+im_hist = image_histogram(image)
 for i in range(histograms.shape[0]):
-    im_hist = image_histogram(image)
     matches[i] = histogram_intersection(im_hist, histograms[i]) - np.sum(im_hist)
 
 sorted_idx = np.argsort(np.abs(matches))

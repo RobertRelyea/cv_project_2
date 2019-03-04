@@ -118,6 +118,3 @@ centers, assignments = kmeans(rgb_flat, 24)
 rgb_kmeans = kmeans_segment(centers, assignments, image.shape)
 
 cv2.imwrite("../figures/part1/k24rgb.jpg", np.uint8(rgb_kmeans))
-
-
-
