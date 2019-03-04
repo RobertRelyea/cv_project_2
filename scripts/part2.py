@@ -11,8 +11,7 @@ DATASET_PATH = "../data/Color_Images/"
 
 def get_class(filename):
     pattern = re.compile("(\\d+)")
-    pdb.set_trace()
-    num = pattern.match(filename).group()
+    num = int(pattern.search(filename).group())
     if num < 300:
         return "Architecture"
     elif num < 400:
@@ -63,12 +62,8 @@ for i in range(histograms.shape[0]):
     im_hist = image_histogram(image)
     matches[i] = histogram_intersection(im_hist, histograms[i]) - np.sum(im_hist)
 
-match_idx = np.argmin(np.abs(matches))
+sorted_idx = np.argsort(np.abs(matches))
 
-print(filenames[match_idx])
-print(get_class(filenames[match_idx]))
-
-
-
-
-
+for match_idx in range(4):
+    print(filenames[sorted_idx[match_idx]])
+    print(get_class(filenames[sorted_idx[match_idx]]))
